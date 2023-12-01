@@ -30,6 +30,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ui->setupUi(this);
 
     s_console = ui->console;
+    ui->console->setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
 
     setWindowTitle(QApplication::applicationName());
     ui->messageWidget->hide();
@@ -47,15 +48,11 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     connect(ui->pushButtonForget, &QPushButton::clicked, this, &MainWindow::slotForgetButtonClicked);
 
     connect(&nmInstance, &NetworkManager::sigOAuth2FlowFinished, this, &MainWindow::slotOAuth2FlowFinished);
-
-    ui->console->setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
-
+    
     qInfo() << "Program executable location:" << QDir::currentPath();
-
     const QString working_dir_str = QDir::current().filePath("working");
     QDir::current().mkdir(working_dir_str);
     working_dir = QDir(working_dir_str);
-
     qInfo() << "Using working directory:" << working_dir_str;
 }
 

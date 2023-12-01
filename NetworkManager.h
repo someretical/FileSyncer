@@ -109,6 +109,7 @@ public:
     enum class OAuth2FlowError {
         None,
         FailedToStartServer,
+        FailedToOpenURL,
         ReceivedEmptyCode,
         TokenRequestError,
         TokenParseError,

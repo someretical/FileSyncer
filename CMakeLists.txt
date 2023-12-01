@@ -40,7 +40,7 @@ find_package(Qt6 COMPONENTS
         Network
         REQUIRED)
 
-add_executable(FileSyncer main.cpp MainWindow.cpp MainWindow.h MainWindow.ui NetworkManager.cpp NetworkManager.h KMessageWidget.cpp KMessageWidget.h)
+add_executable(FileSyncer main.cpp MainWindow.cpp NetworkManager.cpp KMessageWidget.cpp)
 
 target_link_libraries(FileSyncer
         Qt::Core

@@ -31,6 +31,7 @@ NetworkManager::NetworkManager() {
 
     m_OAuth2StateToken = QByteArray(32, '\0');
     m_replyServer = new QTcpServer();
+    connect(m_replyServer, &QTcpServer::newConnection, this, &NetworkManager::handleTCPConnection);
 }
 
 NetworkManager::~NetworkManager() {
@@ -173,17 +174,19 @@ void NetworkManager::OAuth2FlowRequestAuth() {
     QUrl url(m_authorizationEndpoint);
     url.setQuery(query);
 
-    m_replyServer = new QTcpServer();
     if (!m_replyServer->listen(QHostAddress::LocalHost, m_localPort)) {
         qInfo() << "OAuth2 TCP server failed to listen to port" << m_localPort;
         emit OAuth2FlowInterrupted(OAuth2FlowError::FailedToStartServer);
         return;
     };
 
-    connect(m_replyServer, &QTcpServer::newConnection, this, &NetworkManager::handleTCPConnection);
-
     qInfo() << "Opening URL:" << url;
-    QDesktopServices::openUrl(url);
+
+    if (!QDesktopServices::openUrl(url)) {
+        qInfo() << "Failed to open URL";
+        emit OAuth2FlowInterrupted(OAuth2FlowError::FailedToOpenURL);
+        return;
+    }
 }
 
 void NetworkManager::handleTCPConnection() {
